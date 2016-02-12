@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title_line %}парикхмакерская{% endblock %}
+{% block header_advanced %}
+<script type="text/javascript" src="{% static 'js/sha256.min.js' %}"></script>
+<script type="text/javascript">
+{% include "js/login_page.js"%}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="row" ng-controller="AuthBlock">
+<div class="well center-block">
+  	<div class="table-responsive">
+	<table class="table">
+	<tr>
+		<td colspan="3">
+		<input type="password" disabled="disabled" ng-model="passContent" class="form-control" placeholder="пароль">
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3">
+		<p class="text-danger"><b>[{warnMsg}]</b></p>
+		<p class="text-success"><b>[{okMsg}]</b></p>
+		</td>
+	</tr>
+	<tr>
+		<td><button type="button" ng-click="addNum(1)" class="btn btn-info btn-lg btn-block">1</button></td>
+		<td><button type="button" ng-click="addNum(2)" class="btn btn-info btn-lg btn-block">2</button></td>
+		<td><button type="button" ng-click="addNum(3)" class="btn btn-info btn-lg btn-block">3</button></td>
+	</tr>
+	<tr>
+		<td><button type="button" ng-click="addNum(4)" class="btn btn-info btn-lg btn-block">4</button></td>
+		<td><button type="button" ng-click="addNum(5)" class="btn btn-info btn-lg btn-block">5</button></td>
+		<td><button type="button" ng-click="addNum(6)" class="btn btn-info btn-lg btn-block">6</button></td>
+	</tr>
+	<tr>
+		<td><button type="button" ng-click="addNum(7)" class="btn btn-info btn-lg btn-block">7</button></td>
+		<td><button type="button" ng-click="addNum(8)" class="btn btn-info btn-lg btn-block">8</button></td>
+		<td><button type="button" ng-click="addNum(9)" class="btn btn-info btn-lg btn-block">9</button></td>
+	</tr>
+	<tr>
+		<td>
+			<button type="button" ng-disabled="lockAction" ng-click="authRequest()" class="btn btn-success btn-lg btn-block">→</button>
+		</td>
+		<td>
+			<button type="button" ng-click="addNum(0)" class="btn btn-info btn-lg btn-block">0</button>
+		</td>
+		<td>
+			<button type="button" ng-disabled="lockAction" ng-click="passContent = ''; lockAction = true;" class="btn btn-danger btn-lg btn-block">↶</button>
+		</td>
+	</tr>
+	</table>
+	</div>
+  </div>
+</div>
+{% endblock %}

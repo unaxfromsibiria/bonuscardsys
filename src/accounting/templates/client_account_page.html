@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+<!--{% load common %}-->
+{% load staticfiles %}
+{% block title_line %}Посмотреть скидку{% endblock %}
+{% block header_advanced %}
+<script type="text/javascript" src="{% static 'js/sha256.min.js' %}"></script>
+<script type="text/javascript">
+{% include "js/client_account_page.js"%}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div ng-controller="ClientLogonPage">
+<div class="well center-block">
+	<div>
+	</div>
+	<form class="form-horizontal">
+
+	<div class="form-group has-success has-feedback">
+		<label class="control-label col-sm-3">Номер карты</label>
+		<div class="col-sm-9">
+			<div class="input-group">
+				<span class="glyphicon glyphicon-credit-card input-group-addon zero-top"></span>
+				<input type="text" ng-model="card" class="form-control" placeholder="Номер с карты">
+			</div>
+			<span ng-show="card.length > 0" class="glyphicon glyphicon-ok form-control-feedback"></span>
+			<span class="sr-only">(success)</span>
+		</div>
+	</div>
+	<div class="form-group has-success has-feedback">
+		<label class="control-label col-sm-3">Телефон</label>
+		<div class="col-sm-9">
+			<div class="input-group">
+				<span class="glyphicon glyphicon-phone-alt input-group-addon zero-top"></span>
+				<input type="text" ng-model="phone" class="form-control" placeholder="Обязательно заполнить">
+			</div>
+			<span ng-show="phone.length >= 10" class="glyphicon glyphicon-ok form-control-feedback"></span>
+			<span class="sr-only">(success)</span>
+		</div>
+	</div>
+	<div ng-show="!!clientData" class="form-group has-success has-feedback">
+		<label class="control-label col-sm-3">Бонусный счет</label>
+		<div class="col-sm-9">
+			<div class="input-group">
+				<span class="glyphicon glyphicon-usd input-group-addon zero-top"></span>
+				<input type="text" disabled="disabled" ng-model="clientData.bonus" class="form-control">
+			</div>
+			<span class="glyphicon glyphicon-ok form-control-feedback"></span>
+			<span class="sr-only">(success)</span>
+		</div>
+	</div>
+	<div class="form-group has-success has-feedback">
+		<label class="control-label col-sm-3"></label>
+		<div class="col-sm-9">
+			<div class="input-group">
+				<button ng-disabled="card.lenth < 1 || phone.length < 1" type="button" ng-click="doEnter()" class="btn btn-success btn-block">Проверить счет</button>
+			</div>
+		</div>
+	</div>
+	<p class="text-danger"><b>[{warnMsg}]</b></p>
+	<div ng-show="!!clientData" class="alert alert-success" role="alert">
+		<pre ng-show="payments.length < 1">Нет данных об оплатах</pre>
+		<p>
+			<span ng-show="!!clientData.name">[{clientData.name}], </span><span>Вы уже получили скидку на [{saleTotal.toFixed(2)}] рублей.</span>
+		</p>
+		{% with "contacts"|info_var as contact %}
+		<p>{{contact}}</p>
+		{% endwith %}
+	</div>
+	<table ng-show="payments.length > 0" class="table table-bordered">
+		<tr>
+			<th>дата</th>
+			<th>услуга</th>
+			<th>бонусы</th>
+			<th>скидка</th>
+		</tr>
+		<tr class="info" ng-repeat="item in payments">
+			<td>[{item.date}]</td>
+			<td>[{item.service}] [{item.summa}]</td>
+			<td>+[{item.summa_bonus}]</td>
+			<td><span ng-show="!!item.summa_sale">-[{item.summa_sale}]</span></td>
+		</tr>
+	</table>
+  	</form>
+</div>
+</div>
+
+{% endblock %}

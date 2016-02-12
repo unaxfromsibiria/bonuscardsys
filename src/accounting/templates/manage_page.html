@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title_line %}Управление работой парикхмакерской{% endblock %}
+{% block header_advanced %}
+<script type="text/javascript">
+PageApplication.controller('ManagePageNavigation', function($scope) {
+	$scope.goTo = function(url) {
+		window.location = '' + url;
+	}
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="well center-block">
+<div class="row" ng-controller="ManagePageNavigation">
+  <div class="col-xs-12 col-sm-6 col-md-8">
+  	<div class="table-responsive">
+	<table class="table">
+	<tr>
+		<td><button type="button" ng-click="goTo('{% url 'add_card_page' %}')" class="btn btn-info btn-block">Выдать карту</button></td>
+		<td><button type="button" ng-click="goTo('{% url 'payment_page' %}')" class="btn btn-info btn-block">Внести оплату</button></td>
+	</tr>
+	</table>
+	</div>
+  </div>
+</div>
+</div>
+
+{% endblock %}

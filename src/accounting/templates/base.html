@@ -1,0 +1,59 @@
+<!--
+{% load staticfiles %}
+{% load common %}
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}?v={{ 'VERSION'|settings_value }}"/>
+<script type="text/javascript" src="{% static 'js/jquery-2.2.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/angular.min.js' %}"></script>
+<script type="text/javascript">
+var PageApplication = angular.module('PageApplication', []),
+	PageData = {{jsdata|tojs}};
+
+PageApplication.config(function($interpolateProvider) {
+	$interpolateProvider.startSymbol('[{');
+	$interpolateProvider.endSymbol('}]');
+});
+
+PageApplication.config(function($httpProvider) {
+	$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+	$httpProvider.defaults.xsrfCookieName = 'csrftoken';
+	$httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+});
+
+function requestSrc(url, params) {
+	var p = params || {};
+	p.csrfmiddlewaretoken = '{{ csrf_token }}';
+	return {
+		'method': 'POST',
+		'url': url,
+		'data': $.param(p),
+		'responseType': 'JSON'
+	};
+}
+
+</script>
+<link type="text/css" rel="stylesheet" media="all" href="{% static 'css/bootstrap-responsive.min.css' %}?v={{ 'VERSION'|settings_value }}" />
+<link type="text/css" rel="stylesheet" media="all" href="{% static 'css/bootstrap.min.css' %}?v={{ 'VERSION'|settings_value }}" />
+<link type="text/css" rel="stylesheet" media="all" href="{% static 'css/main.css' %}?v={{ 'VERSION'|settings_value }}" />
+{% block header_advanced %}{% endblock %}
+<title>{% block title_line %}{% endblock %}</title>
+</head>
+
+<body>
+{% block  header %}{% endblock %}
+<div class="container" ng-app="PageApplication">
+{% block content %}{% endblock %}
+<div class="footer">
+{% block  footer %}
+{% endblock %}
+</div>
+</div>
+
+</body>
+</html>

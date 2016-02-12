@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title_line %}Оплата услуг{% endblock %}
+{% block header_advanced %}
+<script type="text/javascript">
+{% include "js/payment_manage_page.js" %}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div ng-controller="ManagePagePayment">
+	<div ng-show="!!msgFatal" class="alert alert-danger" role="alert">[{msgFatal}]</div>
+	<div ng-show="!msgFatal" class="well center-block">
+		<form class="form-inline">
+			<div class="form-group">
+				<button type="button" ng-click="goTo('{% url 'manage_page' %}')" class="btn btn-info">Другие действия</button>
+			</div>
+			<div class="form-group">
+				<button type="button" ng-disabled="!clientData" ng-click="goTo('{% url 'payment_page' %}')" class="btn btn-info">Другая карта</button>
+			</div>
+		</form>
+		<form ng-show="!!bonusPolicy" class="form-horizontal">
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3">Данные клиента</label>
+			<div class="col-sm-9">
+				<div class="input-group">
+					<span class="glyphicon glyphicon-user input-group-addon zero-top"></span>
+					<input type="text" ng-disabled="!!clientData" ng-model="number" class="form-control" placeholder="Номер с карты или телефон">
+				</div>
+				<span ng-show="!!clientData" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<span class="sr-only">(success)</span>
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3">Карта клиента</label>
+			<div class="col-sm-9">
+				<div class="input-group">
+					<span class="glyphicon glyphicon-credit-card input-group-addon zero-top"></span>
+					<input type="text" disabled="disabled" ng-model="clientData.card" class="form-control" placeholder="Существующая карта">
+				</div>
+				<span ng-show="!!clientData" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<span class="sr-only">(success)</span>
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3">Бонусный счет</label>
+			<div class="col-sm-9">
+				<div class="input-group">
+					<span class="glyphicon glyphicon-usd input-group-addon zero-top"></span>
+					<input type="text" disabled="disabled" ng-model="clientData.bonus" class="form-control" placeholder="На карте накоплено">
+				</div>
+				<span ng-show="!!clientData" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<span class="sr-only">(success)</span>
+			</div>
+		</div>
+		</form>
+		<div ng-show="!!clientData" class="alert alert-info" role="alert">
+			<p>На счет с каждой оплаты: [{bonusPolicy.percent}]% Скидка каждые [{bonusPolicy.limit}] руб.</p>
+			<p>Сумма услуг: <b>[{totalSum.toFixed(2)}]</b> К оплате: <b>[{toPay.toFixed(2)}]</b></p>
+			<p>
+				<label class="checkbox-inline"><input type="checkbox" ng-model="useSale"> использовать скидку, доступно <b>[{saleValue}]</b></label>
+			</p>
+
+		</div>
+		<form ng-show="!paymentProblem" class="form-inline">
+			<div class="form-group">
+				<select ng-model="selectedService" class="form-control">
+					<option ng-repeat="row in serviceList" value="[{row.id}]">[{row.name}]</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<div class="input-group">
+					<div class="input-group-addon">$</div>
+					<input ng-model="servicePrice" type="text" class="form-control" placeholder="Цена услуги">
+					<div class="input-group-addon">.00</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<button type="button" ng-click="addLine()" ng-disabled="!clientData || !servicePriceCorrect() || !selectedService" class="btn btn-success">Добавить</button>
+			</div>
+		</form>
+		<p></p>
+		<table ng-show="!!clientData" class="table table-bordered">
+			<tr>
+				<th>услуга</th>
+				<th>цена</th>
+				<th>бонусы</th>
+				<th></th>
+			</tr>
+			<tr class="warning" ng-repeat="item in payments">
+				<td>[{item.service}]</td>
+				<td><pre>[{item.price}]</pre></td>
+				<td><pre>[{item.bonus}]</pre></td>
+				<td>
+					<button type="button" ng-click="removeService($index)" class="btn btn-danger btn-xs btn-block">x</button>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<form class="form-inline">
+						<div ng-show="!!msgWarning" class="alert alert-danger" role="alert">[{msgWarning}]</div>
+						<div ng-show="!paymentProblem" class="form-group">
+							<button type="button" ng-click="sendPayment()" ng-disabled="!(totalSum > 0)" class="btn btn-warning">Записать оплату</button>
+						</div>
+					</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+{% endblock %}

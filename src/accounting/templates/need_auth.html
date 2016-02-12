@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title_line %}Необходимо войти{% endblock %}
+{% block header_advanced %}
+<script type="text/javascript">
+PageApplication.controller('NeedAuthBlock', function($scope) {
+	$scope.goTo = function() {
+		window.location = '{% url "in_page" %}';
+	}
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div ng-controller="NeedAuthBlock" class="col-xs-12 col-sm-6 col-md-8">
+<div class="alert alert-danger" role="alert">
+	<p>Необходимо войти в систему. Вам должен быть известен пароль.</p>
+	<p>
+		<button type="button" ng-click="goTo()" class="btn btn-primary btn-lg">Войти</button>
+	</p>
+</div>
+</div>
+{% endblock %}

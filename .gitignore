@@ -60,3 +60,11 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# ide
+.project
+.pydevproject
+.settings
+
+# conf
+src/conf/home*
