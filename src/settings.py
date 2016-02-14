@@ -175,8 +175,8 @@ LOGGING = {
             'propagate': False,
         },
         'django.db.backends': {
-            'handlers': ['console'] if SQL_LOG else [],
-            'level': 'DEBUG',
+            'handlers': ['console'],
+            'level': 'DEBUG' if SQL_LOG else 'ERROR',
         },
         'system': {
             'handlers': ['console'],

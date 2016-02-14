@@ -20,6 +20,7 @@
 	        }
 	    }
 	},
+	"STATIC_ROOT": "/some/path"
 	"DEBUG": true,
 	"SQL_LOG": false,
 	"IN_PASSWORD": "00000",
